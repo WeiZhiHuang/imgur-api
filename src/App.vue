@@ -2,6 +2,8 @@
   <div>
     <input type="file" @change="onChange" accept="image/*">
     <button v-if="image" @click="upload">Upload</button>
+    <br>
+    <img src="https://zippy.gfycat.com/SkinnySeveralAsianlion.gif" width="16" height="16" v-show="loading">
     <div v-show="url">
       <a :href="url" target="_blank">{{ url }}</a>
     </div>
@@ -20,6 +22,7 @@ export default {
     return {
       image: null,
       url: null,
+      loading: false,
     };
   },
   methods: {
@@ -38,6 +41,7 @@ export default {
       }
     },
     upload() {
+      this.loading = true;
       axios
         .post(
           'https://api.imgur.com/3/image',
@@ -48,6 +52,10 @@ export default {
         )
         .then(({ data }) => {
           this.url = data.data.link;
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
         });
     },
   },
